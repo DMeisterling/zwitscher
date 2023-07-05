@@ -69,11 +69,18 @@ export const postsRouter = createTRPCRouter({
   create: privateProcedure
     .input(
       z.object({
-        content: z.string(),
+        content: z.string().min(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const authorId = ctx.userId;
+
+      // if (input.content === "") {
+      //   throw new TRPCError({
+      //     code: "UNPROCESSABLE_CONTENT",
+      //     message: "input cannot be empty!",
+      //   });
+      // }
 
       const { success } = await ratelimit.limit(authorId);
 
